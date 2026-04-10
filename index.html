@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acme Corp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --primary: #6366f1;
+    --primary-light: #818cf8;
+    --primary-dark: #4f46e5;
+    --accent: #f59e0b;
+    --bg: #0b0b12;
+    --bg-card: rgba(255,255,255,0.04);
+    --fg: #f1f1f4;
+    --muted: #8b8ba3;
+    --border: rgba(255,255,255,0.08);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  .bg-glow {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% -20%, rgba(99,102,241,0.15) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 40% at 80% 50%, rgba(245,158,11,0.06) 0%, transparent 60%);
+  }
+
+  .particles {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 0; pointer-events: none; overflow: hidden;
+  }
+  .particle {
+    position: absolute; border-radius: 50%;
+    background: var(--primary); opacity: 0;
+    animation: float-up linear infinite;
+  }
+  @keyframes float-up {
+    0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+    10%  { opacity: 0.6; }
+    90%  { opacity: 0.2; }
+    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+  }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2rem;
+    background: rgba(11,11,18,0.8); backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo {
+    font-weight: 800; font-size: 1.4rem; letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--primary-light), var(--accent));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none; font-size: 0.9rem; font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--fg); }
+
+  section {
+    position: relative; z-index: 1;
+    max-width: 1100px; margin: 0 auto; padding: 0 2rem;
+  }
+
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.4rem 1rem; border-radius: 999px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    font-size: 0.8rem; color: var(--muted); font-weight: 500;
+    margin-bottom: 2rem;
+    animation: fade-in-down 0.8s ease-out;
+  }
+  .badge-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent); animation: pulse-dot 2s infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
+  }
+
+  .hero h1 {
+    font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 900;
+    line-height: 1.05; letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    animation: fade-in-up 1s ease-out 0.2s both;
+  }
+  .hero h1 .highlight {
+    background: linear-gradient(135deg, var(--primary-light), var(--accent));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
+  .hero-sub {
+    font-size: 1.25rem; color: var(--muted); max-width: 600px;
+    margin-bottom: 3rem;
+    animation: fade-in-up 1s ease-out 0.4s both;
+  }
+
+  .hero-ctas {
+    display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+    animation: fade-in-up 1s ease-out 0.6s both;
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.85rem 2rem; border-radius: 12px;
+    font-weight: 600; font-size: 1rem; cursor: pointer;
+    text-decoration: none; border: none; transition: all 0.25s;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white; box-shadow: 0 4px 24px rgba(99,102,241,0.3);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(99,102,241,0.4);
+  }
+  .btn-secondary {
+    background: var(--bg-card); color: var(--fg);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { background: rgba(255,255,255,0.08); transform: translateY(-2px); }
+
+  .stats {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
+    padding: 4rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    margin: 0 auto; max-width: 800px;
+  }
+  .stat { text-align: center; }
+  .stat-value {
+    font-size: 2.5rem; font-weight: 800; letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--fg), var(--muted));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .stat-label { font-size: 0.85rem; color: var(--muted); margin-top: 0.25rem; }
+
+  .features-section { padding: 6rem 2rem; }
+  .section-label {
+    text-transform: uppercase; font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 0.15em; color: var(--primary-light); margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-size: 2.5rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1rem;
+  }
+  .section-sub { color: var(--muted); font-size: 1.1rem; max-width: 550px; margin-bottom: 3rem; }
+
+  .features-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;
+  }
+  .feature-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+    padding: 2rem; transition: all 0.3s;
+  }
+  .feature-card:hover {
+    border-color: rgba(99,102,241,0.3);
+    box-shadow: 0 8px 40px rgba(99,102,241,0.08);
+    transform: translateY(-4px);
+  }
+  .feature-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(245,158,11,0.1));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; margin-bottom: 1.25rem;
+  }
+  .feature-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .feature-card p { color: var(--muted); font-size: 0.95rem; line-height: 1.6; }
+
+  .cta-section {
+    text-align: center; padding: 8rem 2rem;
+  }
+  .cta-section h2 {
+    font-size: 3rem; font-weight: 900; letter-spacing: -0.03em; margin-bottom: 1rem;
+  }
+  .cta-section h2 .highlight {
+    background: linear-gradient(135deg, var(--primary-light), var(--accent));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .cta-section p { color: var(--muted); font-size: 1.1rem; margin-bottom: 2.5rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+
+  footer {
+    position: relative; z-index: 1;
+    text-align: center; padding: 3rem 2rem;
+    border-top: 1px solid var(--border);
+    color: var(--muted); font-size: 0.85rem;
+  }
+
+  @keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in-down {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 640px) {
+    .stats { grid-template-columns: 1fr; gap: 1.5rem; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+<div class="particles" id="particles"></div>
+
+<nav>
+  <div class="logo">Acme Corp</div>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#stats">Results</a></li>
+    <li><a href="#cta">Get Started</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="badge">
+    <span class="badge-dot"></span>
+    Now available worldwide
+  </div>
+  <h1>Build Faster.<br><span class="highlight">Ship Smarter.</span></h1>
+  <p class="hero-sub">
+    Acme Corp gives your team the tools to move at startup speed
+    with enterprise confidence. Less overhead, more momentum.
+  </p>
+  <div class="hero-ctas">
+    <a href="#cta" class="btn btn-primary">Start Free Trial &rarr;</a>
+    <a href="#features" class="btn btn-secondary">See Features</a>
+  </div>
+</section>
+
+<section id="stats">
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-value">10x</div>
+      <div class="stat-label">Faster Deployments</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">4,200+</div>
+      <div class="stat-label">Teams Onboarded</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">99.97%</div>
+      <div class="stat-label">Uptime SLA</div>
+    </div>
+  </div>
+</section>
+
+<section id="features" class="features-section">
+  <div class="section-label">Capabilities</div>
+  <h2 class="section-title">Everything you need to ship</h2>
+  <p class="section-sub">From prototype to production — one platform, zero excuses.</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3>Instant Environments</h3>
+      <p>Spin up full-stack preview environments in seconds. Every branch gets its own URL, database, and API layer.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔒</div>
+      <h3>Security Built In</h3>
+      <p>SOC 2 Type II, end-to-end encryption, and role-based access control — all configured out of the box.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Real-Time Analytics</h3>
+      <p>See exactly how your product is performing. Custom dashboards, alerting, and anomaly detection included.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🤝</div>
+      <h3>Team Collaboration</h3>
+      <p>Shared workspaces, inline code reviews, and async handoffs that actually work across time zones.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🚀</div>
+      <h3>One-Click Deploy</h3>
+      <p>Push to main and it's live. Rollbacks, canary releases, and blue-green deploys — all automated.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🧩</div>
+      <h3>Integrations</h3>
+      <p>Connect to Slack, GitHub, Jira, Figma, and 200+ other tools your team already uses.</p>
+    </div>
+  </div>
+</section>
+
+<section id="cta" class="cta-section">
+  <h2>Ready to <span class="highlight">move faster</span>?</h2>
+  <p>Join thousands of teams already building with Acme Corp. Free for small teams, forever.</p>
+  <a href="#" class="btn btn-primary">Get Started Free &rarr;</a>
+</section>
+
+<footer>
+  &copy; 2026 Acme Corp. All rights reserved. Built with ☕ and ambition.
+</footer>
+
+<script>
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 3 + 1;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (Math.random() * 15 + 10) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    container.appendChild(p);
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.animation = 'fade-in-up 0.8s ease-out forwards';
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.feature-card, .stat, .section-label, .section-title, .section-sub').forEach(el => {
+    el.style.opacity = '0';
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
